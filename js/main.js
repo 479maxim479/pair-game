@@ -1,65 +1,68 @@
-import { Card } from "./card.js";
+import { Card } from './card.js';
+import { createModal } from './card.js';
 
-function newGame(container ,cardsCount) {
-	cardsCount = cardsCount
-	let	cardsNumberArray = []
-	let cardsArray = []
-	let firstCard = null
-	let secondCard = null
+function startGame(container, num) {
+	let cardsShuffleArray = []
+	let cardsArr = []
+	let cardOne = null
+	let cardTwo = null
 
-	for(let i = 1; i <= cardsCount / 2; i++) {
-		cardsNumberArray.push(i);
-		cardsNumberArray.push(i);
+	for( let i = 1; i <= num / 2; i++) {
+		cardsShuffleArray.push(i)
+		cardsShuffleArray.push(i)
 	}
 
-	cardsNumberArray = cardsNumberArray.sort(() => Math.random() - 0.5)
+	cardsShuffleArray = cardsShuffleArray.sort(() => Math.random() - 0.5)
 
-	for(let cardNumber of cardsNumberArray) {
-		cardsArray.push(new Card(container, cardNumber, flip)) 
+	for( let cardNumber of cardsShuffleArray) {
+		cardsArr.push(new Card(container, cardNumber, action))
 	}
 
-	function flip(card) {
-
-		if(firstCard !== null && secondCard !== null) {
-			if(firstCard.number != secondCard.number) {
-				firstCard.open = false
-				secondCard.open = false
-				firstCard = null
-				secondCard = null
+	function action(card) {
+		let count = [];
+		if(cardOne !== null && cardTwo !== null) {
+			if(cardOne.number !== cardTwo.number) {
+				cardOne.open = false
+				cardTwo.open = false
+				cardOne = null
+				cardTwo = null
 			}
 		}
 
-		if(firstCard == null) {
-			firstCard = card
+		if(cardOne === null) {
+			cardOne = card
 		} else {
-			if (secondCard == null) {
-				secondCard = card
+			if(cardTwo === null) {
+				cardTwo = card
+			}
+		}
+	
+		if(cardOne !== null && cardTwo !== null) {
+			if(cardOne.number === cardTwo.number) {
+				cardOne.success = true
+				cardTwo.success = true
+				cardOne = null
+				cardTwo = null	
 			}
 		}
 
-		if(firstCard !== null && secondCard !== null) {
-			if(firstCard.number == secondCard.number) {
-				firstCard.success = true
-				secondCard.success = true
-				firstCard = null
-				secondCard = null
-			}
-		}
-		
-		if(document.querySelectorAll('.success').length === cardsNumberArray.length){
-			alert('Победа')
+		if(document.querySelectorAll('.success').length === cardsArr.length) {
+			alert('победа')
 			container.innerHTML = ''
-			cardsCount = cardsCount
-			cardsNumberArray = []
-			cardsArray = []
-			firstCard = null
-			secondCard = null
-			newGame(container ,cardsCount)
+			cardsShuffleArray = []
+			cardsArr = []
+			cardOne = null
+			cardTwo = null
+			// location.reload()
+			createModal(startGame)
 		}
 	}
 }
 
-newGame(document.getElementById('game'), 10)
+createModal(startGame)
+
+
+// 
 
 
 
